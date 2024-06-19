@@ -1,0 +1,22 @@
+{
+  "name": "graphql-codegen-typescript-schema",
+  "version": "1.0.3",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@graphql-codegen/plugin-helpers": "^5.0.4",
+    "@graphql-tools/apollo-engine-loader": "^8.0.1",
+    "@types/node": "^20.14.6",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@graphql-tools/utils": "^10.0.0"
+  },
+  "peerDependencies": {
+    "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0"
+  }
+}

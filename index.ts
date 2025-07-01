@@ -9,6 +9,7 @@ const plugin: CodegenPlugin<TypescriptSchemaPluginConfig> = {
   plugin(schema, _documents, config) {
     const { schemaOutput = 'schemaObject' } = config;
 
+    // https://github.com/bustle/graphql-loader/blob/a70f730/src/loader.ts#L178-L184
     const minifiedSchema = printSchemaWithDirectives(schema)
       .replace(/#.*/g, '')
       .replace(/\n/g, ' ')

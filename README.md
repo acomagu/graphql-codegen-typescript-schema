@@ -42,7 +42,7 @@ import { schema } from './generated.ts';
 
 ## Options
 
-### `output`
+### `schemaOutput`
 
 This option specifies the format of the generated output. It accepts two values:
 
@@ -53,7 +53,7 @@ For example,
 
 ```yaml
 - typescript-schema:
-    output: schemaObject
+    schemaOutput: schemaObject
 ```
 
 This configuration will generate a file that looks like:
@@ -72,7 +72,7 @@ Also,
 
 ```yaml
 - typescript-schema:
-    output: dslString
+    schemaOutput: dslString
 ```
 
 This configuration will generate a file that looks like:

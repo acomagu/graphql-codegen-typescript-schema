@@ -2,29 +2,29 @@ import type { CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { printSchemaWithDirectives } from '@graphql-tools/utils';
 
 interface TypescriptSchemaPluginConfig {
-  output?: 'schemaObject' | 'dslString';
+  schemaOutput?: 'schemaObject' | 'dslString';
 }
 
 const plugin: CodegenPlugin<TypescriptSchemaPluginConfig> = {
   plugin(schema, _documents, config) {
-    const { output = 'schemaObject' } = config;
+    const { schemaOutput = 'schemaObject' } = config;
 
-    if (output === 'schemaObject') {
+    if (schemaOutput === 'schemaObject') {
       return {
         prepend: ['import { buildSchema } from \'graphql\';'],
         content: `export const schema = buildSchema(${JSON.stringify(printSchemaWithDirectives(schema))});\n`,
       };
-    } else if (output === 'dslString') {
+    } else if (schemaOutput === 'dslString') {
       return {
         content: `export const schema = ${JSON.stringify(printSchemaWithDirectives(schema))};\n`,
       };
     }
 
-    throw new Error(`Invalid output type is specified: ${output}. Only 'schemaObject' or 'dslString' are supported.`);
+    throw new Error(`Invalid schemaOutput type is specified: ${schemaOutput}. Only 'schemaObject' or 'dslString' are supported.`);
   },
   validate(_schema, _documents, config) {
-    if (config.output && !['schemaObject', 'dslString'].includes(config.output)) {
-      throw new Error(`Invalid output type is specified: ${config.output}. Only 'schemaObject' or 'dslString' are supported.`);
+    if (config.schemaOutput && !['schemaObject', 'dslString'].includes(config.schemaOutput)) {
+      throw new Error(`Invalid schemaOutput type is specified: ${config.schemaOutput}. Only 'schemaObject' or 'dslString' are supported.`);
     }
   },
 };

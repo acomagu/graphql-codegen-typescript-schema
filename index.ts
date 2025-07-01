@@ -1,34 +1,30 @@
 import type { CodegenPlugin } from '@graphql-codegen/plugin-helpers';
 import { printSchemaWithDirectives } from '@graphql-tools/utils';
-import { parse } from 'graphql';
-import * as path from 'node:path';
 
 interface TypescriptSchemaPluginConfig {
-  schemaRepresentation?: 'dsl' | 'ast';
+  output?: 'schemaObject' | 'dslString';
 }
 
 const plugin: CodegenPlugin<TypescriptSchemaPluginConfig> = {
-  plugin(schema, _documents, config, info) {
-    const isTs = ['.ts', '.tsx'].includes(path.extname(info?.outputFile ?? ''));
-    const asAny = isTs ? ' as any' : '';
+  plugin(schema, _documents, config) {
+    const { output = 'schemaObject' } = config;
 
-    const { schemaRepresentation = 'ast' } = config;
-    if (schemaRepresentation === 'dsl') {
+    if (output === 'schemaObject') {
       return {
         prepend: ['import { buildSchema } from \'graphql\';'],
         content: `export const schema = buildSchema(${JSON.stringify(printSchemaWithDirectives(schema))});\n`,
       };
-    } else if (schemaRepresentation === 'ast') {
+    } else if (output === 'dslString') {
       return {
-        prepend: ['import { buildASTSchema } from \'graphql\';'],
-        content: `export const schema = buildASTSchema(${JSON.stringify(parse(printSchemaWithDirectives(schema)))}${asAny});\n`,
+        content: `export const schema = ${JSON.stringify(printSchemaWithDirectives(schema))};\n`,
       };
     }
-    throw new Error(`Invalid representation type is specified: ${schemaRepresentation}. Only 'dsl' or 'ast' are supported.`);
+
+    throw new Error(`Invalid output type is specified: ${output}. Only 'schemaObject' or 'dslString' are supported.`);
   },
   validate(_schema, _documents, config) {
-    if (config.schemaRepresentation && !['dsl', 'ast'].includes(config.schemaRepresentation)) {
-      throw new Error(`Invalid representation type is specified: ${config.schemaRepresentation}. Only 'dsl' or 'ast' are supported.`);
+    if (config.output && !['schemaObject', 'dslString'].includes(config.output)) {
+      throw new Error(`Invalid output type is specified: ${config.output}. Only 'schemaObject' or 'dslString' are supported.`);
     }
   },
 };

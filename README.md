@@ -42,36 +42,18 @@ import { schema } from './generated.ts';
 
 ## Options
 
-### `schemaRepresentation`
+### `output`
 
-This option specifies how the schema should be coded in the generated TypeScript file. It accepts two values:
+This option specifies the format of the generated output. It accepts two values:
 
-- `ast` (default): Coded the schema as an AST object.
-- `dsl`: Coded the schema as a DSL string.
+- `schemaObject` (default): Exports a GraphQL schema object using `buildSchema`.
+- `dslString`: Exports the schema as a raw DSL string.
 
 For example,
 
 ```yaml
-- typescript-schema
-    schemaRepresentation: ast
-```
-
-This configuration will generate a file that looks like:
-
-```typescript
-import { buildASTSchema } from 'graphql';
-
-export const schema = buildASTSchema({
-  kind: 'Document',
-  definitions: [ ... ]
-} as any);
-```
-
-Also,
-
-```yaml
-- typescript-schema
-    schemaRepresentation: dsl
+- typescript-schema:
+    output: schemaObject
 ```
 
 This configuration will generate a file that looks like:
@@ -86,4 +68,21 @@ export const schema = buildSchema(`
 `);
 ```
 
-The former style makes the generated file size bigger, but CPU time is considered slightly shorter. The latter style has a smaller file size, but requires parsing on loading.
+Also,
+
+```yaml
+- typescript-schema:
+    output: dslString
+```
+
+This configuration will generate a file that looks like:
+
+```typescript
+export const schema = `
+  type Query {
+    hello: String
+  }
+`;
+```
+
+The schema object format is ready to use with GraphQL libraries, while the DSL string format provides more flexibility for custom processing.
